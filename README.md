@@ -1,9 +1,10 @@
 # junkkill
 
-[![npm version](https://img.shields.io/npm/v/junkkill?logo=npm)](https://www.npmjs.com/package/junkkill)
-[![npm downloads](https://img.shields.io/npm/dm/junkkill?logo=npm)](https://www.npmjs.com/package/junkkill)
-[![license](https://img.shields.io/npm/l/junkkill)](https://github.com/nandhu-44/junkkill/blob/main/LICENSE)
-[![node](https://img.shields.io/node/v/junkkill)](https://www.npmjs.com/package/junkkill)
+[![npm version](https://img.shields.io/npm/v/junkkill?style=flat-square&logo=npm)](https://www.npmjs.com/package/junkkill)
+[![npm downloads](https://img.shields.io/npm/dm/junkkill?style=flat-square&logo=npm)](https://www.npmjs.com/package/junkkill)
+[![node](https://img.shields.io/node/v/junkkill?style=flat-square&logo=node.js)](https://www.npmjs.com/package/junkkill)
+[![license](https://img.shields.io/npm/l/junkkill?style=flat-square)](https://github.com/nandhu-44/junkkill/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/nandhu-44/junkkill?style=flat-square)](https://github.com/nandhu-44/junkkill/stargazers)
 
 Safe, interactive junk cleaner for development folders.
 
