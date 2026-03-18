@@ -1,6 +1,6 @@
 {
   "name": "junkkill",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Safe npkill-like cleaner for large junk folders and files",
   "keywords": [
     "cleanup",
