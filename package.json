@@ -1,0 +1,39 @@
+{
+  "name": "junkkill",
+  "version": "0.0.0",
+  "description": "Safe npkill-like cleaner for large junk folders and files",
+  "keywords": [
+    "cleanup",
+    "cleaner",
+    "cli",
+    "delete",
+    "disk-usage",
+    "junk",
+    "junkkill",
+    "node-modules",
+    "project-cleanup",
+    "python-cache",
+    "space-reclaimer",
+    "storage",
+    "venv"
+  ],
+  "homepage": "https://github.com/nandhu-44/junkkill#readme",
+  "bugs": {
+    "url": "https://github.com/nandhu-44/junkkill/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nandhu-44/junkkill.git"
+  },
+  "license": "MIT",
+  "author": "nandhu-44",
+  "type": "module",
+  "main": "junkkill.js",
+  "bin": {
+    "junkkill": "junkkill.js"
+  },
+  "scripts": {
+    "start": "node ./junkkill.js",
+    "help": "node ./junkkill.js --help"
+  }
+}
