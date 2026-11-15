@@ -1,12 +1,14 @@
 {
   "name": "junkkill",
-  "version": "0.1.1",
-  "description": "Find and delete heavy dev junk: node_modules, virtualenvs, build output, caches and huge files",
+  "version": "0.2.0",
+  "description": "Find what is eating your disk: junk folders (node_modules, venvs, build output, caches), large folders and large files. Browse by size and delete.",
   "keywords": [
     "cleanup",
     "cleaner",
     "disk-space",
     "disk-usage",
+    "disk-analyzer",
+    "du",
     "free-space",
     "storage",
     "junk",

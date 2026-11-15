@@ -6,9 +6,11 @@
 // `risky` marks folders that are usually regenerable but deserve a second look.
 
 export const DEFAULTS = {
-  minDirSize: '10MB',
+  minJunkSize: '10MB',
+  minFolderSize: '1GB',
   minFileSize: '100MB',
-  scanFiles: true,
+  show: ['junk', 'folder', 'file'],
+  view: 'list',
   sort: 'size',
   confirm: true,
   targets: [],

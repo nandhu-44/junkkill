@@ -92,6 +92,19 @@ export function mergeNames(defaults, user) {
 }
 
 const SORTS = ['size', 'age', 'path'];
+const VIEWS = ['list', 'tree'];
+const KIND_ALIASES = { junk: 'junk', folder: 'folder', folders: 'folder', file: 'file', files: 'file' };
+
+export function parseKinds(list) {
+  const kinds = new Set();
+  for (const k of asList(list, 'show')) {
+    const kind = KIND_ALIASES[String(k).toLowerCase()];
+    if (!kind) throw new Error(`Unknown kind "${k}". Use junk, folder or file.`);
+    kinds.add(kind);
+  }
+  if (kinds.size === 0) throw new Error('Show at least one of: junk, folder, file');
+  return kinds;
+}
 
 /** Combines built-in defaults, the config file and CLI flags (in that order). */
 export function resolveOptions(config, args) {
@@ -116,10 +129,26 @@ export function resolveOptions(config, args) {
     throw new Error('"threads" must be a positive integer');
   }
 
+  const view = args.tree ? 'tree' : pick(undefined, 'view');
+  if (!VIEWS.includes(view)) throw new Error(`View must be one of: ${VIEWS.join(', ')}`);
+
+  // --only beats the config's "show". --no-files and "scanFiles": false are kept from 0.1.
+  const kinds = parseKinds(args.only ?? config.show ?? DEFAULTS.show);
+  if (args.files === false || (!args.only && config.scanFiles === false)) kinds.delete('file');
+  if (kinds.size === 0) throw new Error('Nothing left to show');
+
+  // Per-kind flag > --min > config > default. --min-dir / "minDirSize" are 0.1 names for junk.
+  const size = (cli, ...keys) => {
+    const fromConfig = keys.map((k) => config[k]).find((v) => v !== undefined);
+    return parseSize(cli ?? args.min ?? fromConfig ?? DEFAULTS[keys[0]]);
+  };
+
   return {
-    minDirBytes: parseSize(pick(args.minDir, 'minDirSize')),
-    minFileBytes: parseSize(pick(args.minFile, 'minFileSize')),
-    scanFiles: Boolean(pick(args.files, 'scanFiles')),
+    minJunkBytes: size(args.minJunk ?? args.minDir, 'minJunkSize', 'minDirSize'),
+    minFolderBytes: size(args.minFolder, 'minFolderSize'),
+    minFileBytes: size(args.minFile, 'minFileSize'),
+    kinds,
+    view,
     confirm: args.yes ? false : Boolean(config.confirm ?? DEFAULTS.confirm),
     sort,
     threads,
