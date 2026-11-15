@@ -10,7 +10,7 @@ Find what's eating your disk and delete it from a fast, keyboard-driven list. It
 | Kind | What | Listed from |
 | --- | --- | --- |
 | **junk** | Regenerable folders: `node_modules`, virtualenvs, Rust/Maven/Gradle/.NET build output, caches… | 10 MB |
-| **folder** | Any other folder holding lots of data, e.g. `Downloads/old-isos`. Marked `!` because it's your own data | 1 GB |
+| **folder** | Any other folder holding lots of data, e.g. `Downloads/old-isos`. Shown as `folder !` in the list: `!` means it's your own data, so check before deleting | 1 GB |
 | **file** | Single big files, labelled by kind: video, archive, disk image, model weights, dataset, log, dump | 100 MB |
 
 ```
@@ -35,8 +35,8 @@ Press `v` (or start with `--tree`) for the **tree view**: a disk-analyzer style 
  size 3.60 GB    freed 0 B    items 3
 
     NAME                          TYPE                    %        SIZE ▾
- ❯  2023/                         folder !   █████▏     51.2%     1.80 GB
-    2024/                         folder !   ████▋      46.8%     1.64 GB
+ ❯  2023/                                    █████▏     51.2%     1.80 GB
+    2024/                                    ████▋      46.8%     1.64 GB
     412 smaller files                        ▏           2.0%     72.0 MB
 ```
 
@@ -44,6 +44,7 @@ Press `v` (or start with `--tree`) for the **tree view**: a disk-analyzer style 
 - **Zero dependencies.** Plain Node.js 18+.
 - **Knows the ecosystems.** Node, Python, Rust, Maven, Gradle, .NET, CMake, Zig, Haskell, Elixir, Dart, CocoaPods, Xcode, Terraform and more. Generic names such as `target`, `build` and `bin` only count when the matching project file is next to them (`Cargo.toml`, `build.gradle`, `*.csproj`, …).
 - **No double counting.** A large folder is the deepest folder holding that much data that isn't already listed as junk or a large file, so you get `photos/2023` instead of `~`, `~/photos` and `~/photos/2023` for the same bytes. Deleting a folder marks everything listed inside it as gone.
+- **Explains itself.** The line under the list says what the highlighted row is, e.g. *rust junk · regenerable, safe to delete* or *Large folder · holds your own data, check before deleting*.
 - **Safe.** Only scanned items can be deleted, and each one is re-checked first: it must still exist, sit inside the scanned folder and not be a symlink. Items marked `!` get a warning in the confirmation prompt.
 
 ## Install

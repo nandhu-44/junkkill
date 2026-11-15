@@ -1,6 +1,6 @@
 {
   "name": "junkkill",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Find what is eating your disk: junk folders (node_modules, venvs, build output, caches), large folders and large files. Browse by size and delete.",
   "keywords": [
     "cleanup",

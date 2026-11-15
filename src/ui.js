@@ -362,7 +362,9 @@ export function runUI({ scanner, root, options, name, version, dryRun }) {
     else if (e.type === 'dir' && !e.junk) nameCell = c.bold(shown);
     else nameCell = shown;
 
-    const typeCell = typeColor(e)(padEnd(e.pseudo ? '' : typeLabel(e), W_TYPE - 1)) + ' ';
+    // Sizes already tell the story here, so the "large folder" tag is list-view only.
+    const tag = e.pseudo || e.kind === 'folder' ? '' : typeLabel(e);
+    const typeCell = typeColor(e)(padEnd(tag, W_TYPE - 1)) + ' ';
     const fraction = total > 0 && isLive(e) ? e.size / total : 0;
     const barColor = e.pseudo ? c.gray : e.type === 'dir' ? (e.junk ? c.yellow : c.cyan) : c.magenta;
     const barCell = barColor(bar(fraction, W_BAR - 2)) + '  ';
@@ -371,6 +373,21 @@ export function runUI({ scanner, root, options, name, version, dryRun }) {
   };
 
   const limit = (bytes) => formatBytes(bytes).replace(/\.0+ /, ' ');
+  /** One-line explanation of a row's tag, shown under the list. */
+  const describe = (e, tree) => {
+    if (!e || e.pseudo || !isLive(e)) return '';
+    if (e.kind === 'folder' && !tree) {
+      return `${c.yellow('Large folder')} ${c.dim('· holds your own data, check before deleting')}`;
+    }
+    if (e.junk && e.risky) {
+      return `${c.yellow(`${e.group} output`)} ${c.dim('· usually regenerable, but check before deleting')}`;
+    }
+    if (e.junk) {
+      return `${c.cyan(`${e.group} junk`)} ${c.dim('· regenerable, safe to delete')}`;
+    }
+    return '';
+  };
+
   const thresholds = () => {
     const parts = [];
     if (scanner.kinds.has('junk')) parts.push(`junk ≥ ${limit(options.minJunkBytes)}`);
@@ -493,10 +510,13 @@ export function runUI({ scanner, root, options, name, version, dryRun }) {
     while (lines.length < HEADER_LINES + height) lines.push('');
 
     // Scroll position + footer
-    let info = '';
-    if (p.rows.length > height) info = ` ${p.top + 1}-${Math.min(p.top + height, p.rows.length)} of ${p.rows.length}`;
-    if (!tree && state.scanning && scanner.kinds.has('folder')) info += `${info ? '  ·  ' : ' '}large folders are listed when the scan finishes`;
-    lines.push(c.dim(info));
+    // Info line: what the row under the cursor is, then scroll position.
+    const parts = [];
+    const explain = describe(p.current, tree);
+    if (explain) parts.push(explain);
+    if (p.rows.length > height) parts.push(c.dim(`${p.top + 1}-${Math.min(p.top + height, p.rows.length)} of ${p.rows.length}`));
+    if (!tree && state.scanning && scanner.kinds.has('folder')) parts.push(c.dim('large folders are listed when the scan finishes'));
+    lines.push(parts.length ? ` ${parts.join(c.dim('  ·  '))}` : '');
     lines.push(renderFooter(width));
 
     out.write(`\x1b[H${lines.map((l) => `${clip(l, width)}\x1b[K`).join('\n')}\x1b[J`);
