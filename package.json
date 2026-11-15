@@ -1,21 +1,21 @@
 {
   "name": "junkkill",
-  "version": "0.0.2",
-  "description": "Safe npkill-like cleaner for large junk folders and files",
+  "version": "0.1.0",
+  "description": "Find and delete heavy dev junk: node_modules, virtualenvs, build output, caches and huge files",
   "keywords": [
     "cleanup",
     "cleaner",
     "cli",
+    "tui",
     "delete",
     "disk-usage",
+    "disk-space",
     "junk",
-    "junkkill",
     "node-modules",
-    "project-cleanup",
+    "venv",
     "python-cache",
-    "space-reclaimer",
-    "storage",
-    "venv"
+    "cargo-target",
+    "build-artifacts"
   ],
   "homepage": "https://github.com/nandhu-44/junkkill#readme",
   "bugs": {
@@ -28,12 +28,18 @@
   "license": "MIT",
   "author": "nandhu-44",
   "type": "module",
-  "main": "junkkill.js",
   "bin": {
-    "junkkill": "junkkill.js"
+    "junkkill": "bin/junkkill.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
   },
   "scripts": {
-    "start": "node ./junkkill.js",
-    "help": "node ./junkkill.js --help"
+    "start": "node bin/junkkill.js",
+    "test": "node --test"
   }
 }
