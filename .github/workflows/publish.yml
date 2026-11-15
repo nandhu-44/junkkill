@@ -1,48 +1,40 @@
-name: Publish package
+# Publishes to npm when a version tag (v1.2.3) is pushed.
+# Uses npm trusted publishing (OIDC): no npm token is stored on GitHub.
+# One-time setup on npmjs.com: package junkkill > Settings > Trusted Publisher >
+# GitHub Actions, repository nandhu-44/junkkill, workflow publish.yml.
+
+name: Publish
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
+    tags: ["v*.*.*"]
 
 permissions:
   contents: read
+  id-token: write # lets npm verify this workflow and attach provenance
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
           registry-url: https://registry.npmjs.org
 
-      - name: Test
-        run: npm test
+      # Trusted publishing needs npm 11.5.1 or newer.
+      - run: npm install -g npm@latest
 
-      - name: Check if version already exists on npm
-        id: version_check
-        shell: bash
+      - name: Check the tag matches package.json
         run: |
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-
-          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version > /dev/null 2>&1; then
-            echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} already exists on npm. Skipping publish."
-            echo "should_publish=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Package ${PACKAGE_NAME}@${PACKAGE_VERSION} does not exist on npm. Will publish."
-            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          version="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME#v}" != "$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
           fi
 
-      - name: Publish to npm
-        if: steps.version_check.outputs.should_publish == 'true'
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm test
+
+      - run: npm publish --access public

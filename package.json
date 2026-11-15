@@ -1,6 +1,6 @@
 {
   "name": "junkkill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find and delete heavy dev junk: node_modules, virtualenvs, build output, caches and huge files",
   "keywords": [
     "cleanup",
